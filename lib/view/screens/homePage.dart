@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../helper/firebase_helper.dart';
@@ -12,8 +13,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    User user = ModalRoute.of(context)!.settings.arguments as User;
+
     return SafeArea(
         child: Scaffold(
+            drawer: const Drawer(
+              backgroundColor: Colors.red,
+            ),
             appBar: AppBar(
               leading: Container(),
               title: const Text("HOME PAGE"),

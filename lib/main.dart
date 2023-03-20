@@ -1,4 +1,5 @@
 import 'package:app/view/screens/LoginPage.dart';
+import 'package:app/view/screens/SignUpPage.dart';
 import 'package:app/view/screens/homePage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ void main() async {
     routes: {
       '/': (context) => const HomePage(),
       'login': (context) => const LoginPage(),
+      'signup': (context) => const SignUpPage(),
     },
   ));
 }

@@ -12,7 +12,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> signInFormKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> signUpFormKey = GlobalKey<FormState>();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -94,6 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                             });
                           },
                           controller: passwordController,
+                          obscureText: true,
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: "Password",
@@ -115,25 +115,40 @@ class _LoginPageState extends State<LoginPage> {
                         if (signInFormKey.currentState!.validate()) {
                           signInFormKey.currentState!.save();
 
-                          User? user = await FirebaseAuthHelper
+                          Map<String, dynamic> res = await FirebaseAuthHelper
                               .firebaseAuthHelper
                               .signIn(email: email!, password: password!);
 
-                          if (user != null) {
+                          if (res['user'] != null) {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
-                              content: Text("Sign In Successful....."),
+                              content: Text("Login In Successful....."),
                               behavior: SnackBarBehavior.floating,
+                              backgroundColor: Color(0xff263961),
                             ));
-                            Navigator.of(context).pushReplacementNamed('/');
+                            Navigator.of(context).pushReplacementNamed('/',
+                                arguments: res['user']);
+                          } else if (res['error'] != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(res['error']),
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: Color(0xff263961),
+                            ));
                           } else {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
-                              content: Text("Sign In Failed....."),
+                              content: Text("Login In Failed....."),
                               behavior: SnackBarBehavior.floating,
+                              backgroundColor: Color(0xff263961),
                             ));
                           }
                         }
+                        setState(() {
+                          emailController.clear();
+                          passwordController.clear();
+                          email = null;
+                          password = null;
+                        });
                       },
                       child: const Text(
                         "Log In",
@@ -142,21 +157,31 @@ class _LoginPageState extends State<LoginPage> {
                       )),
                   TextButton(
                       onPressed: () async {
-                        User? user = await FirebaseAuthHelper.firebaseAuthHelper
+                        Map<String, dynamic> res = await FirebaseAuthHelper
+                            .firebaseAuthHelper
                             .logInWithAnonymously();
 
-                        if (user != null) {
+                        if (res['user'] != null) {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             content: Text("Login Successful....."),
                             behavior: SnackBarBehavior.floating,
+                            backgroundColor: Color(0xff263961),
                           ));
-                          Navigator.of(context).pushReplacementNamed('/');
+                          Navigator.of(context).pushReplacementNamed('/',
+                              arguments: res['user']);
+                        } else if (res['error'] != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(res['error']),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Color(0xff263961),
+                          ));
                         } else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             content: Text("Login Failed....."),
                             behavior: SnackBarBehavior.floating,
+                            backgroundColor: Color(0xff263961),
                           ));
                         }
                       },
@@ -172,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 90, vertical: 10)),
                     onPressed: () {
-                      validateAndSignUp();
+                      Navigator.of(context).pushNamed('signup');
                     },
                     child: const Text(
                       "Create new Account",
@@ -186,20 +211,30 @@ class _LoginPageState extends State<LoginPage> {
                     elevation: 5,
                     child: ListTile(
                       onTap: () async {
-                        User? user = await FirebaseAuthHelper.firebaseAuthHelper
+                        Map<String, dynamic> res = await FirebaseAuthHelper
+                            .firebaseAuthHelper
                             .signInWithGoogle();
-                        if (user != null) {
+                        if (res['user'] != null) {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             content: Text("Login Successful With Google....."),
                             behavior: SnackBarBehavior.floating,
+                            backgroundColor: Color(0xff263961),
                           ));
-                          Navigator.of(context).pushReplacementNamed('/');
+                          Navigator.of(context).pushReplacementNamed('/',
+                              arguments: res['user']);
+                        } else if (res['error'] != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(res['error']),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Color(0xff263961),
+                          ));
                         } else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             content: Text("Login Failed With Google....."),
                             behavior: SnackBarBehavior.floating,
+                            backgroundColor: Color(0xff263961),
                           ));
                         }
                       },
@@ -220,108 +255,5 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  validateAndSignUp() async {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Center(child: Text("Sign Up")),
-            content: Form(
-              key: signUpFormKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextFormField(
-                    validator: (val) {
-                      if (val!.isEmpty) {
-                        return "Enter your email first......";
-                      }
-                      return null;
-                    },
-                    onSaved: (val) {
-                      setState(() {
-                        email = emailController.text;
-                      });
-                    },
-                    controller: emailController,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Email",
-                        labelText: "Email",
-                        hintStyle: TextStyle(color: Colors.grey),
-                        labelStyle: TextStyle(color: Colors.grey)),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    validator: (val) {
-                      if (val!.isEmpty) {
-                        return "Enter your password first......";
-                      }
-                      return null;
-                    },
-                    onSaved: (val) {
-                      setState(() {
-                        password = passwordController.text;
-                      });
-                    },
-                    controller: passwordController,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Password",
-                        labelText: "Password",
-                        hintStyle: TextStyle(color: Colors.grey),
-                        labelStyle: TextStyle(color: Colors.grey)),
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      emailController.clear();
-                      passwordController.clear();
-                      email = null;
-                      password = null;
-                    });
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("Cancel")),
-              ElevatedButton(
-                  onPressed: () async {
-                    if (signUpFormKey.currentState!.validate()) {
-                      signUpFormKey.currentState!.save();
-
-                      User? user = await FirebaseAuthHelper.firebaseAuthHelper
-                          .signUp(email: email!, password: password!);
-
-                      if (user != null) {
-                        Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text("Sign Up Successful....."),
-                          behavior: SnackBarBehavior.floating,
-                        ));
-                        Navigator.of(context).pushReplacementNamed('/');
-                      } else {
-                        Navigator.of(context).pop();
-
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text("Sign Up Failed....."),
-                          behavior: SnackBarBehavior.floating,
-                        ));
-                      }
-                    }
-                  },
-                  child: const Text("Sign Up")),
-            ],
-          );
-        });
   }
 }

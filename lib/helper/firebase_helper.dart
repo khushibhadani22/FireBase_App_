@@ -10,77 +10,108 @@ class FirebaseAuthHelper {
 
   //TODO : logInWithAnonymously()
 
-  Future<User?> logInWithAnonymously() async {
-    UserCredential userCredential = await firebaseAuth.signInAnonymously();
+  Future<Map<String, dynamic>> logInWithAnonymously() async {
+    Map<String, dynamic> res = {};
+    try {
+      UserCredential userCredential = await firebaseAuth.signInAnonymously();
 
-    User? user = userCredential.user;
+      User? user = userCredential.user;
 
-    return user;
+      res['user'] = user;
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "operation-not-allowed":
+          res['error'] = "Sign In method is disabled....";
+          break;
+      }
+    }
+    return res;
   }
 
   //TODO : SignUP()
-  Future<User?> signUp(
+
+  Future<Map<String, dynamic>> signUp(
       {required String email, required String password}) async {
-    UserCredential userCredential = await firebaseAuth
-        .createUserWithEmailAndPassword(email: email, password: password);
-    User? user = userCredential.user;
-    return user;
+    Map<String, dynamic> res = {};
+
+    try {
+      UserCredential userCredential = await firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      User? user = userCredential.user;
+      res['user'] = user;
+    } on FirebaseAuthException catch (e) {
+      print("===================");
+      print(e.code);
+      print("===================");
+
+      switch (e.code) {
+        case "weak-password":
+          res['error'] = "password must be lengthy....";
+          break;
+        case "operation-not-allowed":
+          res['error'] = "Sign In method is disabled....";
+          break;
+        case "email-already-in-use":
+          res['error'] = "This user already exists....";
+          break;
+      }
+    }
+    return res;
   }
 
   //TODO : SignIn()
-
-  Future<User?> signIn(
+  Future<Map<String, dynamic>> signIn(
       {required String email, required String password}) async {
-    UserCredential userCredential = await firebaseAuth
-        .signInWithEmailAndPassword(email: email, password: password);
-    User? user = userCredential.user;
-    return user;
-  }
+    Map<String, dynamic> res = {};
+    try {
+      UserCredential userCredential = await firebaseAuth
+          .signInWithEmailAndPassword(email: email, password: password);
+      User? user = userCredential.user;
+      res['user'] = user;
+    } on FirebaseAuthException catch (e) {
+      print("===================");
+      print(e.code);
+      print("===================");
 
-  // Future<Map<String,dynamic>> signIn(
-  //      {required String email, required String password}) async {
-  //    Map<String,dynamic> res ={};
-  //    try {
-  //
-  //      UserCredential userCredential = await firebaseAuth
-  //          .signInWithEmailAndPassword(email: email, password: password);
-  //      User? user = userCredential.user;
-  //      res['user'] = user;
-  //    } on FirebaseAuthException catch (e){
-  //      print ("===================");
-  //      print(e.code);
-  //      print ("===================");
-  //
-  //      switch (e.code){
-  //        case "wrong-password" :
-  //          res['error'] = "password is wrong....";
-  //          break;
-  //        case "operation-not-allowed" :
-  //          res['error'] = "Sign In method is disabled....";
-  //          break;
-  //          case "user-disabled" :
-  //        res['error'] = "You are blocked....";
-  //        break;
-  //      }
-  //    }
-  //  }
+      switch (e.code) {
+        case "wrong-password":
+          res['error'] = "password is wrong....";
+          break;
+        case "operation-not-allowed":
+          res['error'] = "Sign In method is disabled....";
+          break;
+        case "user-disabled":
+          res['error'] = "You are blocked....";
+          break;
+      }
+    }
+    return res;
+  } //TODO : SignInWithGoogle()
 
-  //TODO : SignInWithGoogle()
+  Future<Map<String, dynamic>> signInWithGoogle() async {
+    Map<String, dynamic> res = {};
+    try {
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-  Future<User?> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      UserCredential userCredential =
+          await firebaseAuth.signInWithCredential(credential);
 
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-    UserCredential userCredential =
-        await firebaseAuth.signInWithCredential(credential);
-
-    User? user = userCredential.user;
-    return user;
+      User? user = userCredential.user;
+      res['user'] = user;
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "operation-not-allowed":
+          res['error'] = "Sign In method is disabled....";
+          break;
+      }
+    }
+    return res;
   }
 
   //TODO : logOut()
