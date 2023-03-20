@@ -18,26 +18,47 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
         child: Scaffold(
             drawer: Drawer(
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 120,
-                  ),
-                  CircleAvatar(
-                    radius: 80,
-                    foregroundImage: (user.photoURL != null)
-                        ? NetworkImage(user.photoURL as String)
-                        : null,
-                  ),
-                  (user.isAnonymous)
-                      ? Container()
-                      : (user.displayName == null)
-                          ? Container()
-                          : Text("Name : ${user.displayName}"),
-                  (user.isAnonymous)
-                      ? Container()
-                      : Text("Email : ${user.email}"),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 80,
+                    ),
+                    (user.photoURL != null)
+                        ? CircleAvatar(
+                            radius: 80,
+                            foregroundImage: (user.photoURL != null)
+                                ? NetworkImage(user.photoURL as String)
+                                : null)
+                        : const CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            radius: 80,
+                            child: Icon(
+                              Icons.person,
+                              size: 130,
+                              color: Colors.white,
+                            ),
+                          ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    (user.isAnonymous)
+                        ? const Text(
+                            "GUEST MODE",
+                            style: TextStyle(
+                                fontSize: 25,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          )
+                        : (user.displayName == null)
+                            ? Container()
+                            : Text("Name : ${user.displayName}"),
+                    (user.isAnonymous)
+                        ? Container()
+                        : Text("Email : ${user.email}"),
+                  ],
+                ),
               ),
             ),
             appBar: AppBar(
