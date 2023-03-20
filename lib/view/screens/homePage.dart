@@ -53,10 +53,21 @@ class _HomePageState extends State<HomePage> {
                           )
                         : (user.displayName == null)
                             ? Container()
-                            : Text("Name : ${user.displayName}"),
+                            : Column(
+                                children: [
+                                  Text(
+                                    "Name : ${user.displayName}",
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
                     (user.isAnonymous)
                         ? Container()
-                        : Text("Email : ${user.email}"),
+                        : Text(
+                            "Email : ${user.email}",
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                   ],
                 ),
               ),
