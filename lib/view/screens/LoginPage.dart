@@ -68,7 +68,9 @@ class _LoginPageState extends State<LoginPage> {
                               email = emailController.text;
                             });
                           },
+                          style: const TextStyle(color: Colors.white),
                           controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: "Email",
@@ -91,6 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                               password = passwordController.text;
                             });
                           },
+                          style: const TextStyle(color: Colors.white),
                           controller: passwordController,
                           obscureText: true,
                           decoration: const InputDecoration(
@@ -154,6 +157,13 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       )),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    "-------------------------- OR --------------------------",
+                    style: TextStyle(color: Colors.white),
+                  ),
                   TextButton(
                       onPressed: () async {
                         Map<String, dynamic> res = await FirebaseAuthHelper
@@ -185,66 +195,72 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       },
                       child: const Text(
-                        "Anonymously",
+                        "Guest Account",
                         style: TextStyle(color: Colors.white, fontSize: 15),
                       )),
+                  GestureDetector(
+                    onTap: () async {
+                      Map<String, dynamic> res = await FirebaseAuthHelper
+                          .firebaseAuthHelper
+                          .signInWithGoogle();
+                      if (res['user'] != null) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text("Login Successful With Google....."),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Color(0xff263961),
+                        ));
+                        Navigator.of(context)
+                            .pushReplacementNamed('/', arguments: res['user']);
+                      } else if (res['error'] != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(res['error']),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Color(0xff263961),
+                        ));
+                      } else {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text("Login Failed With Google....."),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Color(0xff263961),
+                        ));
+                      }
+                    },
+                    child: Container(
+                      height: 50,
+                      width: 345,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Colors.white.withOpacity(0.8), width: 2),
+                          borderRadius: BorderRadius.circular(40)),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 50,
+                          ),
+                          Image.asset('assets/image/goggle.png'),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          const Text(
+                            "Login With Goggle ",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   const SizedBox(
                     height: 90,
                   ),
-                  OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 90, vertical: 10)),
+                  TextButton(
                     onPressed: () {
                       Navigator.of(context).pushNamed('signup');
                     },
                     child: const Text(
-                      "Create new Account",
+                      "Create new Account ?",
                       style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Card(
-                    elevation: 5,
-                    child: ListTile(
-                      onTap: () async {
-                        Map<String, dynamic> res = await FirebaseAuthHelper
-                            .firebaseAuthHelper
-                            .signInWithGoogle();
-                        if (res['user'] != null) {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content: Text("Login Successful With Google....."),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Color(0xff263961),
-                          ));
-                          Navigator.of(context).pushReplacementNamed('/',
-                              arguments: res['user']);
-                        } else if (res['error'] != null) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(res['error']),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Color(0xff263961),
-                          ));
-                        } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content: Text("Login Failed With Google....."),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Color(0xff263961),
-                          ));
-                        }
-                      },
-                      leading: Image.asset('assets/image/goggle.png'),
-                      title: const Text(
-                        "Continue as",
-                      ),
-                      subtitle: const Text(
-                        "Goggle Account",
-                      ),
-                      trailing: const Icon(Icons.arrow_forward_ios),
                     ),
                   ),
                 ],

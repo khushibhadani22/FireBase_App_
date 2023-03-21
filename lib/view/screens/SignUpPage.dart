@@ -62,7 +62,9 @@ class _SignUpPageState extends State<SignUpPage> {
                           email = emailController.text;
                         });
                       },
+                      style: const TextStyle(color: Colors.white),
                       controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           hintText: "Email",
@@ -85,6 +87,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           password = passwordController.text;
                         });
                       },
+                      style: const TextStyle(color: Colors.white),
                       obscureText: true,
                       controller: passwordController,
                       decoration: const InputDecoration(
