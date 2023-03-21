@@ -92,6 +92,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       controller: passwordController,
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(),
+                          suffixIcon: Icon(
+                            Icons.remove_red_eye_rounded,
+                            color: Colors.grey,
+                          ),
                           hintText: "Password",
                           labelText: "Password",
                           hintStyle: TextStyle(color: Colors.grey),

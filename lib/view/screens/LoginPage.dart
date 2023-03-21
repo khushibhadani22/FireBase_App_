@@ -100,6 +100,10 @@ class _LoginPageState extends State<LoginPage> {
                               border: OutlineInputBorder(),
                               hintText: "Password",
                               labelText: "Password",
+                              suffixIcon: Icon(
+                                Icons.remove_red_eye_rounded,
+                                color: Colors.grey,
+                              ),
                               hintStyle: TextStyle(color: Colors.grey),
                               labelStyle: TextStyle(color: Colors.grey)),
                         ),
