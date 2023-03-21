@@ -83,6 +83,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Color(0xff516080)),
         title: const Text(
           "HOME PAGE",
           style:
