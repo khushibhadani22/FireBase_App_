@@ -119,7 +119,52 @@ class _HomePageState extends State<HomePage> {
               return ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (context, index) {
-                    return ExpansionTile(title: Text(data[index]['name']));
+                    print(
+                      data[index]['Name'],
+                    );
+                    return ExpansionTile(
+                      title: Text(
+                        data[index]['Name'],
+                      ),
+                      subtitle: Text(
+                          "Email :- ${data[index]['Email']}\nContact:- ${data[index]['Contact']}"),
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xff516080)),
+                              onPressed: () {},
+                              label: const Text(
+                                "Edit",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              icon: const Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                              ),
+                            ),
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xff516080)),
+                              onPressed: () {
+                                FireStoreHelper.fireStoreHelper
+                                    .removeUser(id: data[index]['id']);
+                              },
+                              label: const Text(
+                                "Delete",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
                   });
             }
             return const Center(

@@ -20,9 +20,9 @@ class FireStoreHelper {
 
     await collectionReference!
         .add({
-          'name': name,
-          'email': email,
-          'contact': contact,
+          'Name': name,
+          'Email': email,
+          'Contact': contact,
         })
         .then(
           (value) => print("user is add...."),
@@ -30,14 +30,25 @@ class FireStoreHelper {
         .catchError((error) => print("$error"));
   }
 
-//TODO : getAllUser
   Stream<QuerySnapshot<Object?>> getUser() {
     connectCollection();
 
     return collectionReference!.snapshots();
   }
 
-  //TODO : removeUser
-  //TODO : editUser
-  editUser({required String id, required String name}) async {}
+  removeUser({required String id}) {
+    connectCollection();
+
+    collectionReference!.doc(id).delete();
+  }
+
+  editUser({required String id, required Map<Object, Object> data}) async {
+    connectCollection();
+
+    collectionReference!
+        .doc(id)
+        .update(data)
+        .then((value) => print("User Edit..."))
+        .catchError((error) => print(error));
+  }
 }
