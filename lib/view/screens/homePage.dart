@@ -232,7 +232,7 @@ class _HomePageState extends State<HomePage> {
                                                       .digitsOnly,
                                                 ],
                                                 textInputAction:
-                                                    TextInputAction.next,
+                                                    TextInputAction.done,
                                                 initialValue: data[index]
                                                         ['Contact']
                                                     .toString(),
@@ -260,6 +260,7 @@ class _HomePageState extends State<HomePage> {
                                                                     ['id']
                                                                 .toString(),
                                                             data: editValue);
+
                                                     Navigator.pop(context);
                                                   }
                                                 },
