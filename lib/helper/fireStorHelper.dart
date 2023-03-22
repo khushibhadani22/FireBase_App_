@@ -39,10 +39,16 @@ class FireStoreHelper {
   removeUser({required String id}) {
     connectCollection();
 
-    collectionReference!.doc(id).delete();
+    collectionReference!
+        .doc(id)
+        .delete()
+        .then((value) => print("user delete.."))
+        .catchError((error) {
+      print(error);
+    });
   }
 
-  editUser({required String id, required Map<Object, Object> data}) async {
+  editUser({required String id, required Map<Object, Object> data}) {
     connectCollection();
 
     collectionReference!

@@ -1,6 +1,7 @@
 import 'package:app/helper/fireStorHelper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../helper/firebase_helper.dart';
 
@@ -13,6 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> editFormKey = GlobalKey<FormState>();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -123,6 +125,7 @@ class _HomePageState extends State<HomePage> {
                       data[index]['Name'],
                     );
                     return ExpansionTile(
+                      textColor: const Color(0xff516080),
                       title: Text(
                         data[index]['Name'],
                       ),
@@ -135,7 +138,138 @@ class _HomePageState extends State<HomePage> {
                             ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xff516080)),
-                              onPressed: () {},
+                              onPressed: () {
+                                Map<Object, Object> editValue = {
+                                  'Name': data[index]['Name'],
+                                  'Email': data[index]['Email'],
+                                  'Contact': data[index]['Contact'],
+                                };
+
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Center(
+                                            child: Text(
+                                          "Edit User",
+                                          style: TextStyle(
+                                              color: Color(0xff516080)),
+                                        )),
+                                        content: Form(
+                                          key: editFormKey,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              TextFormField(
+                                                style: const TextStyle(
+                                                    color: Color(0xff516080)),
+                                                validator: (val) {
+                                                  if (val!.isEmpty) {
+                                                    return "Enter Your Name....";
+                                                  }
+                                                  return null;
+                                                },
+                                                onSaved: (val) {
+                                                  editValue['Name'] =
+                                                      val as Object;
+                                                },
+                                                textInputAction:
+                                                    TextInputAction.next,
+                                                initialValue: data[index]
+                                                    ['Name'],
+                                                decoration:
+                                                    const InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              TextFormField(
+                                                style: const TextStyle(
+                                                    color: Color(0xff516080)),
+                                                validator: (val) {
+                                                  if (val!.isEmpty) {
+                                                    return "Enter Your Email....";
+                                                  }
+                                                  return null;
+                                                },
+                                                onSaved: (val) {
+                                                  editValue['Email'] =
+                                                      val as Object;
+                                                },
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                textInputAction:
+                                                    TextInputAction.next,
+                                                initialValue: data[index]
+                                                    ['Email'],
+                                                decoration:
+                                                    const InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              TextFormField(
+                                                style: const TextStyle(
+                                                    color: Color(0xff516080)),
+                                                validator: (val) {
+                                                  if (val!.isEmpty) {
+                                                    return "Enter Your Contact....";
+                                                  }
+                                                  return null;
+                                                },
+                                                onSaved: (val) {
+                                                  editValue['Contact'] =
+                                                      int.parse(val!);
+                                                },
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                inputFormatters: [
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly,
+                                                ],
+                                                textInputAction:
+                                                    TextInputAction.next,
+                                                initialValue: data[index]
+                                                        ['Contact']
+                                                    .toString(),
+                                                decoration:
+                                                    const InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                                onFieldSubmitted: (val) {
+                                                  if (editFormKey.currentState!
+                                                      .validate()) {
+                                                    editFormKey.currentState!
+                                                        .save();
+
+                                                    print(
+                                                        "============================================");
+                                                    print(
+                                                        "${data[index]['id']}");
+                                                    print(
+                                                        "============================================");
+
+                                                    FireStoreHelper
+                                                        .fireStoreHelper
+                                                        .editUser(
+                                                            id: data[index]
+                                                                    ['id']
+                                                                .toString(),
+                                                            data: editValue);
+                                                    Navigator.pop(context);
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              },
                               label: const Text(
                                 "Edit",
                                 style: TextStyle(color: Colors.white),
