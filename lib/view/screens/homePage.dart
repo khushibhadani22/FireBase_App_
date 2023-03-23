@@ -122,15 +122,19 @@ class _HomePageState extends State<HomePage> {
                   itemCount: data.length,
                   itemBuilder: (context, index) {
                     print(
-                      data[index]['Name'],
+                        "==================================================================================");
+                    print(
+                      data[index]['name'],
                     );
+                    print(
+                        "==================================================================================");
                     return ExpansionTile(
                       textColor: const Color(0xff516080),
                       title: Text(
-                        data[index]['Name'],
+                        data[index]['name'],
                       ),
                       subtitle: Text(
-                          "Email :- ${data[index]['Email']}\nContact:- ${data[index]['Contact']}"),
+                          "Email :- ${data[index]['email']}\nContact:- ${data[index]['contact']}"),
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -139,10 +143,17 @@ class _HomePageState extends State<HomePage> {
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xff516080)),
                               onPressed: () {
+                                print(
+                                    "===============================================================================");
+                                print(data[index]['id']);
+                                print(
+                                    "===============================================================================");
+                                print(data[index]['email']);
+                                print(data[index]['contact']);
                                 Map<Object, Object> editValue = {
-                                  'Name': data[index]['Name'],
-                                  'Email': data[index]['Email'],
-                                  'Contact': data[index]['Contact'],
+                                  'name': data[index]['name'],
+                                  'email': data[index]['email'],
+                                  'contact': data[index]['contact'],
                                 };
 
                                 showDialog(
@@ -170,13 +181,13 @@ class _HomePageState extends State<HomePage> {
                                                   return null;
                                                 },
                                                 onSaved: (val) {
-                                                  editValue['Name'] =
+                                                  editValue['name'] =
                                                       val as Object;
                                                 },
                                                 textInputAction:
                                                     TextInputAction.next,
                                                 initialValue: data[index]
-                                                    ['Name'],
+                                                    ['name'],
                                                 decoration:
                                                     const InputDecoration(
                                                   border: OutlineInputBorder(),
@@ -195,7 +206,7 @@ class _HomePageState extends State<HomePage> {
                                                   return null;
                                                 },
                                                 onSaved: (val) {
-                                                  editValue['Email'] =
+                                                  editValue['email'] =
                                                       val as Object;
                                                 },
                                                 keyboardType:
@@ -203,7 +214,7 @@ class _HomePageState extends State<HomePage> {
                                                 textInputAction:
                                                     TextInputAction.next,
                                                 initialValue: data[index]
-                                                    ['Email'],
+                                                    ['email'],
                                                 decoration:
                                                     const InputDecoration(
                                                   border: OutlineInputBorder(),
@@ -222,7 +233,7 @@ class _HomePageState extends State<HomePage> {
                                                   return null;
                                                 },
                                                 onSaved: (val) {
-                                                  editValue['Contact'] =
+                                                  editValue['contact'] =
                                                       int.parse(val!);
                                                 },
                                                 keyboardType:
@@ -234,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                                                 textInputAction:
                                                     TextInputAction.done,
                                                 initialValue: data[index]
-                                                        ['Contact']
+                                                        ['contact']
                                                     .toString(),
                                                 decoration:
                                                     const InputDecoration(
@@ -284,6 +295,13 @@ class _HomePageState extends State<HomePage> {
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xff516080)),
                               onPressed: () {
+                                print(
+                                    "==========================================");
+                                print(
+                                    "==========================================");
+                                print(
+                                    "==========================================");
+
                                 FireStoreHelper.fireStoreHelper
                                     .removeUser(id: data[index]['id']);
                               },
@@ -338,6 +356,7 @@ class _HomePageState extends State<HomePage> {
                           onSaved: (val) {
                             name = val;
                           },
+                          textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.text,
                           style: const TextStyle(color: Color(0xff516080)),
                           decoration: const InputDecoration(
@@ -360,6 +379,7 @@ class _HomePageState extends State<HomePage> {
                           onSaved: (val) {
                             email = val;
                           },
+                          textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.emailAddress,
                           style: const TextStyle(color: Color(0xff516080)),
                           decoration: const InputDecoration(

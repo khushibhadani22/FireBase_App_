@@ -20,9 +20,9 @@ class FireStoreHelper {
 
     await collectionReference!
         .add({
-          'Name': name,
-          'Email': email,
-          'Contact': contact,
+          'name': name,
+          'email': email,
+          'contact': contact,
         })
         .then(
           (value) => print("user is add...."),
