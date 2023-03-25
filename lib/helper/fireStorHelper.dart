@@ -15,6 +15,7 @@ class FireStoreHelper {
   Future<void> addUser(
       {required String name,
       required String email,
+      required String id,
       required int contact}) async {
     connectCollection();
 
@@ -22,6 +23,7 @@ class FireStoreHelper {
         .add({
           'name': name,
           'email': email,
+          'id': id,
           'contact': contact,
         })
         .then(
