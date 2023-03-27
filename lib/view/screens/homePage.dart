@@ -265,7 +265,7 @@ class _HomePageState extends State<HomePage> {
                                                                 .toString(),
                                                             data: editValue);
 
-                                                    Navigator.pop(context);
+                                                    Navigator.of(context).pop();
                                                   }
                                                 },
                                               ),
@@ -406,7 +406,6 @@ class _HomePageState extends State<HomePage> {
                                 name: name!,
                                 email: email!,
                                 contact: contact!,
-                                id: 'id',
                               );
                               Navigator.of(context).pop();
                               nameController.clear();

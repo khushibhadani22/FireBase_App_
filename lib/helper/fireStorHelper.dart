@@ -15,15 +15,17 @@ class FireStoreHelper {
   Future<void> addUser(
       {required String name,
       required String email,
-      required String id,
       required int contact}) async {
     connectCollection();
 
+    String uId = DateTime.now().millisecondsSinceEpoch.toString();
+
     await collectionReference!
-        .add({
+        .doc(uId)
+        .set({
+          'id': uId,
           'name': name,
           'email': email,
-          'id': id,
           'contact': contact,
         })
         .then(
